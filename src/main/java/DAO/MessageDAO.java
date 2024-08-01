@@ -60,5 +60,32 @@ public class MessageDAO {
         return null;
         }
     }
+    public boolean checkPoster(Message message){
+        boolean userExists;
+        ArrayList<Integer> postedBy = new ArrayList<>();
+        Connection conn = ConnectionUtil.getConnection();
+        String sql = "SELECT posted_by FROM message";
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.executeQuery();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+
+            if(rs.next()){
+                int userToAdd = rs.getInt("posted_by");
+                postedBy.add(userToAdd);
+            }
+            else{
+                return false;
+            }
+            if(postedBy.equals()){
+                return true;
+            }
+        }
+        catch(Exception e){
+        e.printStackTrace();
+        return null;
+        }
+    }
     
 }
