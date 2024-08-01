@@ -33,8 +33,11 @@ public class MessageService {
     public void validateNewMessage(Message message);
 
     if(Objects.isNull(message)){
-        
+        throw new IllegalArgumentException("Message can't be empty. ");
+    }
 
+    if(message.length() >= 255){
+        throw new IllegalArgumentException("Message must. ");
     }
 
 
