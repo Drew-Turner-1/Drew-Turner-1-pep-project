@@ -21,25 +21,21 @@ public class MessageService {
     public Message createMessage(Message message){
         try{
             messageDAO.validateNewMessage();
+            Message newMessage = messageDAO.addMessage(message);
+            return newMessage;
         }
-        return newMessage;
-    }
-
-    public int getMessageStatus(){
-        return messageServiceStatus;
-    }
-
-    public int getMessageStatusDAO(){
-        return messageDAO.getMessageStatusDAO();
-    }
-
-    public boolean validateMessageStatus(){
-        if(getStatus() == 200 && getStatus() == (getStatusDAO())){
-            return true;
-        }
-        else{
-            return false;
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
-    
+
+    public void validateNewMessage(Message message);
+
+    if(Objects.isNull(message)){
+        
+
+    }
+
+
 }
