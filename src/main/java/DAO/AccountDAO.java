@@ -69,7 +69,7 @@ public class AccountDAO {
 
 
 
-  public Account processLoginAccount(Account account){
+  public Account LoginAccount(Account account){
     Connection conn = ConnectionUtil.getConnection();
     String sql = "SELECT * FROM account WHERE username = '?' AND password = '?')";
 

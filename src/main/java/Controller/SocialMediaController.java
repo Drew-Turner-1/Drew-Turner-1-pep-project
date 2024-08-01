@@ -1,6 +1,6 @@
 package Controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.databind.ObjectMapper;
 
 import Model.Account;
 import Service.AccountService;
@@ -21,14 +21,15 @@ public class SocialMediaController {
 
      private AccountService accountService;
 
-     public SocialMediaController(AccountService accountService){
-         this.accountService = accountService;
+     public SocialMediaController(){
+         this.accountService = new AccountService();
      }
 
     public Javalin startAPI() {
             Javalin app = Javalin.create();
-        app.get("example-endpoint", this::exampleHandler);
-
+        // app.get("example-endpoint", this::exampleHandler);
+        app.post("/register", this::addAccount);
+        app.post("/login", this::loginAccount);
             return app;
         }
 
@@ -42,12 +43,24 @@ public class SocialMediaController {
     private void addAccount(Context ctx){
         Account account = ctx.bodyAsClass(Account.class);
         Account newAccount = accountService.addAccount(account);
-        ctx.status(201).json(newAccount);
+        if((newAccount.getUsername().equals(account.getUsername())) && (newAccount.getPassword().equals(account.getPassword()))){
+            ctx.status(200).json(newAccount);
+
+        }
+
+        // if(newAccount.getUsername().equals(account.getUsername())){
+        //     ctx.status(200).json(newAccount);
+
+        // }
+        else{
+            ctx.status(400);
+        }
+        //ctx.status(200).json(newAccount);
     }
 
-    private void addAccount(Context ctx){
+    private void loginAccount(Context ctx){
         Account account = ctx.bodyAsClass(Account.class);
-        Account newAccount = accountService.addAccount(account);
+        Account newAccount = accountService.loginAccount(account);
         ctx.status(201).json(newAccount);
     }
 
