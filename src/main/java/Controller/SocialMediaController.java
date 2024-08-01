@@ -7,23 +7,29 @@ import Service.AccountService;
 import io.javalin.Javalin;
 import io.javalin.http.Context;
 
+
 /**
  * TODO: You will need to write your own endpoints and handlers for your controller. The endpoints you will need can be
  * found in readme.md as well as the test cases. You should
  * refer to prior mini-project labs and lecture materials for guidance on how a controller may be built.
  */
+
+
 public class SocialMediaController {
-     /**
+
+
+    /**
      * In order for the test cases to work, you will need to write the endpoints in the startAPI() method, as the test
      * suite must receive a Javalin object from this method.
      * @return a Javalin app object which defines the behavior of the Javalin controller.
-     */
+    */
 
-     private AccountService accountService;
 
-     public SocialMediaController(){
-         this.accountService = new AccountService();
-     }
+    private AccountService accountService;
+
+    public SocialMediaController(){
+            this.accountService = new AccountService();
+    }
 
     public Javalin startAPI() {
             Javalin app = Javalin.create();
@@ -33,6 +39,7 @@ public class SocialMediaController {
             return app;
         }
 
+
     /**
      * This is an example handler for an example endpoint.
      * @param context The Javalin Context object manages information about both the HTTP request and response.
@@ -40,28 +47,30 @@ public class SocialMediaController {
     // private void exampleHandler(Context context) {
     //     context.json("sample text");
     // }
+
+
     private void addAccount(Context ctx){
         Account account = ctx.bodyAsClass(Account.class);
         Account newAccount = accountService.addAccount(account);
-        if((newAccount.getUsername().equals(account.getUsername())) && (newAccount.getPassword().equals(account.getPassword()))){
+        
+        if((newAccount != null) && (accountService.validateStatus() == true)){
             ctx.status(200).json(newAccount);
-
         }
-
-        // if(newAccount.getUsername().equals(account.getUsername())){
-        //     ctx.status(200).json(newAccount);
-
-        // }
         else{
             ctx.status(400);
         }
-        //ctx.status(200).json(newAccount);
     }
 
     private void loginAccount(Context ctx){
         Account account = ctx.bodyAsClass(Account.class);
-        Account newAccount = accountService.loginAccount(account);
-        ctx.status(201).json(newAccount);
+        Account validAccount = accountService.loginAccount(account);
+
+        if((validAccount != null) && (accountService.validateStatus() == true)){
+            ctx.status(200).json(validAccount);
+        }
+        else{
+            ctx.status(401);
+        }
     }
 
 }

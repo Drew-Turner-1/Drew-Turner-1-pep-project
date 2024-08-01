@@ -1,25 +1,23 @@
 package Service;
-
+ 
 import java.util.*;
-
 import DAO.AccountDAO;
 import Model.Account;
-//import io.javalin.http.HttpStatus;
 
 public class AccountService {
 
     private AccountDAO accountDAO;
 
+    int serviceStatus;
+
     public AccountService(){
         this.accountDAO = new AccountDAO();
     }
 
-    int serviceStatus;
-
-    
     public Account addAccount(Account account){
-        validateAccount(account);
+        
         try{
+            validateAccount(account);
             Account newAccount = accountDAO.addAccount(account);
             serviceStatus = 200;
             return newAccount;
@@ -27,9 +25,8 @@ public class AccountService {
         catch (Exception e) {
             e.printStackTrace();
             serviceStatus = 400;
-            //throw new RuntimeException("An error occurred while saving the account: " + e.getMessage() + ".");
+            return null;
         }
-        return null;
     }
     
     private void validateAccount(Account account) {
@@ -59,45 +56,54 @@ public class AccountService {
 
         catch(IllegalArgumentException e) {
             e.printStackTrace();
-            serviceStatus = 400;
+            serviceStatus = 400; 
+            throw new IllegalArgumentException("Login failed :/ ");
         }
     }
 
     public Account loginAccount(Account account){
-        //validateAccountForLogin(account);
         try{
-            //if(accountDAO.processLogin().contains(account)){
+            validateAccountForLogin(account);
+            if(accountDAO.processLogin().contains(account)){
                 Account validAccount = accountDAO.LoginAccount(account);
                 serviceStatus = 200;
                 return validAccount;
-            //}
+            }
+            else{
+                serviceStatus = 401;
+                return  null;
+            }
         }
         catch (Exception e) {
             e.printStackTrace();
             serviceStatus = 401;
             return null;
-            //throw new RuntimeException("An error occurred while logging in: " + e.getMessage() + ".");
         }
-        // status = 401;
-        // return null;
     }
     
 
-    // private void validateAccountForLogin(Account account) {
-    //     if (Objects.isNull(account)) {
-    //         serviceStatus = 400;
-    //         throw new IllegalArgumentException("A Username and Password are required.");
-    //     }
-    //     if (Objects.isNull(account.getUsername()) || account.getUsername().trim().isEmpty()) {
-    //         serviceStatus = 400;
-    //         throw new IllegalArgumentException("A Username is required.");
-    //     }
-    //     if (Objects.isNull(account.getPassword()) || account.getPassword().trim().isEmpty()) {
-    //         serviceStatus = 400;
-    //         throw new IllegalArgumentException("A Password is required.");
-    //     }
-    //     serviceStatus = 200;
-    // }
+    private void validateAccountForLogin(Account account) {
+        try{
+            if (Objects.isNull(account)) {
+                serviceStatus = 400;
+                throw new IllegalArgumentException("A Username and Password are required.");
+            }
+            if (Objects.isNull(account.getUsername()) || account.getUsername().trim().isEmpty()) {
+                serviceStatus = 400;
+                throw new IllegalArgumentException("A Username is required.");
+            }
+            if (Objects.isNull(account.getPassword()) || account.getPassword().trim().isEmpty()) {
+                serviceStatus = 400;
+                throw new IllegalArgumentException("A Password is required.");
+            }
+            serviceStatus = 200;
+        }
+        catch(IllegalArgumentException e){
+            e.printStackTrace();
+            serviceStatus = 400;
+            throw new IllegalArgumentException("Login failed :/ ");
+        }
+    }
 
     public int getStatus(){
         return serviceStatus;
@@ -105,5 +111,14 @@ public class AccountService {
 
     public int getStatusDAO(){
         return accountDAO.getStatusDAO();
+    }
+
+    public boolean validateStatus(){
+        if(getStatus() == 200 && getStatus() == (getStatusDAO())){
+        return true;
+        }
+        else{
+            return false;
+        }
     }
 }

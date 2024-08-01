@@ -22,29 +22,22 @@ public class AccountDAO {
       ResultSet accountId = pstmt.getGeneratedKeys();
 
       if(accountId.next()){
-        int newAccountId = (int) accountId.getLong(1);
+        int newAccountId = accountId.getInt(1);
 
         Account newAccount = new Account(newAccountId, account.getUsername(), account.getPassword());
         statusDAO = 200;
-        return newAccount;  
+        return newAccount;
       }
     }
 
     catch(SQLException e){
       statusDAO = 400;
       e.printStackTrace();
+      statusDAO = 400;
+      return null;
     }
-
-    // finally {
-    //   try {
-    //     conn.close();
-    //   } 
-    //   catch (Exception e) {
-    //     e.printStackTrace();
-    //   }
-    // }
     statusDAO = 400;
-    return null;
+      return null;
   } 
 
   public List<Account> processLogin(){
@@ -59,10 +52,12 @@ public class AccountDAO {
         Account newAccount = new Account(rs.getString("username"), rs.getString("password"));
         allAccountsNoIds.add(newAccount);
       }
+      statusDAO = 200;
       return allAccountsNoIds;
     }
     catch(SQLException e){
       e.printStackTrace();
+      statusDAO = 401;
       return null;
     }
   }
@@ -71,21 +66,27 @@ public class AccountDAO {
 
   public Account LoginAccount(Account account){
     Connection conn = ConnectionUtil.getConnection();
-    String sql = "SELECT * FROM account WHERE username = '?' AND password = '?')";
+    String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
 
     try{
       PreparedStatement pstmt = conn.prepareStatement(sql);
       pstmt.setString(1, account.getUsername());
       pstmt.setString(2, account.getPassword());
       ResultSet rs = pstmt.executeQuery();
-      
-      Account validAccount = new Account(rs.getInt("account_id"), account.getUsername(), account.getPassword());
-      
-      return validAccount;
-      
+        if(rs.next()){
+          Account validAccount = new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
+          //Account validAccount = new Account(rs.getInt("account_id"), account.getUsername(), account.getPassword());
+          statusDAO = 401;
+          return validAccount;
+        }
+        else{
+          statusDAO = 401;
+          return null;
+        }
     }
     catch(SQLException e){
       e.printStackTrace();
+      statusDAO = 401;
       return null;
     }
   }
@@ -105,19 +106,14 @@ public class AccountDAO {
         Account newAccountToAdd = new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
         allAccounts.add(newAccountToAdd);
       }
+      statusDAO = 200;
       return allAccounts;
     }
     catch(SQLException e){
       e.printStackTrace();
+      statusDAO = 401;
     }
-    finally{
-      try{
-        conn.close();
-      }
-      catch(Exception e){
-        e.printStackTrace();
-      }
-    }
+    
     return null;
   }
 
@@ -135,18 +131,13 @@ public class AccountDAO {
         String newUsernameToAdd = (rs.getString("username"));
         allAccountUsernames.add(newUsernameToAdd);
       }
+
+      statusDAO = 200;
       return allAccountUsernames;
     }
     catch(SQLException e){
       e.printStackTrace();
-    }
-    finally{
-      try{
-        conn.close();
-      }
-      catch(Exception e){
-        e.printStackTrace();
-      }
+      statusDAO = 400;
     }
     return null;
   }
