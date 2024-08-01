@@ -64,15 +64,10 @@ public class AccountService {
     public Account loginAccount(Account account){
         try{
             validateAccountForLogin(account);
-            if(accountDAO.processLogin().contains(account)){
+            //if(accountDAO.processLogin().contains(account)){
                 Account validAccount = accountDAO.LoginAccount(account);
                 serviceStatus = 200;
                 return validAccount;
-            }
-            else{
-                serviceStatus = 401;
-                return  null;
-            }
         }
         catch (Exception e) {
             e.printStackTrace();

@@ -2,7 +2,6 @@ package DAO;
 
 import java.sql.*;
 import java.util.*;
-
 import Model.Account;
 import Util.ConnectionUtil;
 
@@ -40,30 +39,6 @@ public class AccountDAO {
       return null;
   } 
 
-  public List<Account> processLogin(){
-    Connection conn = ConnectionUtil.getConnection();
-    String sql = "SELECT username, password FROM account";
-
-    try{
-      ArrayList<Account> allAccountsNoIds = new ArrayList<>();
-      PreparedStatement pstmt = conn.prepareStatement(sql);
-      ResultSet rs = pstmt.executeQuery();
-      while(rs.next()){
-        Account newAccount = new Account(rs.getString("username"), rs.getString("password"));
-        allAccountsNoIds.add(newAccount);
-      }
-      statusDAO = 200;
-      return allAccountsNoIds;
-    }
-    catch(SQLException e){
-      e.printStackTrace();
-      statusDAO = 401;
-      return null;
-    }
-  }
-
-
-
   public Account LoginAccount(Account account){
     Connection conn = ConnectionUtil.getConnection();
     String sql = "SELECT * FROM account WHERE username = ? AND password = ?";
@@ -76,7 +51,7 @@ public class AccountDAO {
         if(rs.next()){
           Account validAccount = new Account(rs.getInt("account_id"), rs.getString("username"), rs.getString("password"));
           //Account validAccount = new Account(rs.getInt("account_id"), account.getUsername(), account.getPassword());
-          statusDAO = 401;
+          statusDAO = 200;
           return validAccount;
         }
         else{
