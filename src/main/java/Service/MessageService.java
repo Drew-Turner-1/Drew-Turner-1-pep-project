@@ -53,6 +53,28 @@ public class MessageService {
         }
     }
 
+    public Message getMessageById(Message messageIdOnly){
+        try{
+            Message messageById = messageDAO.getMessageById(messageIdOnly);
+            return messageById;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Message editMessageById(Message messageIdOnly){
+        try{
+            Message updatedMessage = messageDAO.editMessageById(messageIdOnly);
+            return updatedMessage;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void validateNewMessage(Message message){
 
         if(Objects.isNull(message)){

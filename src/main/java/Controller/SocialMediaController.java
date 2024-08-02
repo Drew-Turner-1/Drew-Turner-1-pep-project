@@ -45,8 +45,8 @@ public class SocialMediaController {
         app.post("/register", this::addAccount);
         app.post("/login", this::loginAccount);
         app.post("/messages", this::createMessage);
-        // app.patch("/messages/{message_id}", this::editMessageById);
-        // app.delete("/messages/{message_id}", this::deleteMessageById);
+        app.patch("/messages/{message_id}", this::editMessageById);
+        app.delete("/messages/{message_id}", this::deleteMessageById);
         
         
             return app;
@@ -107,6 +107,25 @@ public class SocialMediaController {
         int postingUser = ctx.bodyAsClass(int.class);
         List<Message> allMessagesById = new ArrayList<Message>(messageService.getAllUserMessages(postingUser));
         ctx.status(200).json(allMessagesById);
+    }
+
+    private void getMessageById(Context ctx){
+        Message messageIdOnly = ctx.bodyAsClass(Message.class);
+        Message messageById = messageService.getMessageById(messageIdOnly);
+        ctx.status(200).json(messageById);
+    }
+
+    private void editMessageById(Context ctx){
+        Message messageIdOnly = ctx.bodyAsClass(Message.class);
+        Message updatedMessage = messageService.editMessageById(messageIdOnly);
+        ctx.status(200).json(updatedMessage);
+    }
+
+
+    private void deleteMessageById(Context ctx){
+        Message messageIdOnly = ctx.bodyAsClass(Message.class);
+        Message messageById = messageService.deleteMessageById(messageIdOnly);
+        ctx.status(200).json(messageById);
     }
 
 }

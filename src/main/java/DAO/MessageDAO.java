@@ -9,7 +9,6 @@ import Util.ConnectionUtil;
 public class MessageDAO {
 
 
-    int messageStatusDAO;
 
     public Message addMessage(Message message){
         Connection conn = ConnectionUtil.getConnection();
@@ -79,6 +78,59 @@ public class MessageDAO {
                 Message messageToAdd = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
                 allMessages.add(messageToAdd);
                 return allMessages;
+            }
+            else{
+                return null;
+            }
+        }
+        catch(Exception e){
+        e.printStackTrace();
+        return null;
+        }
+    }
+
+    public Message getMessageById(Message messageIdOnly){
+        
+        Connection conn = ConnectionUtil.getConnection();
+        String sql = "SELECT * FROM message WHERE message_id = ?";
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1,messageIdOnly.getMessage_id());
+            pstmt.executeQuery();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+
+            if(rs.next()){
+                Message messageById = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
+                return messageById;
+            }
+            else{
+                return null;
+            }
+        }
+        catch(Exception e){
+        e.printStackTrace();
+        return null;
+        }
+    }
+
+
+    public Message editMessageById(Message messageIdOnly){
+        
+        Connection conn = ConnectionUtil.getConnection();
+        String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setString(1,messageIdOnly.getMessage_text());
+            pstmt.setInt(2,messageIdOnly.getMessage_id());
+
+            pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+
+            if(rs.next()){
+                Message updatedMessage = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
+                return updatedMessage;
             }
             else{
                 return null;
