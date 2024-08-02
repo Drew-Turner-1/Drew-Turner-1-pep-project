@@ -63,7 +63,7 @@ public class MessageDAO {
         }
     }
 
-    public List<Message> getAllMessagesById(int postingUser){
+    public List<Message> getAllUserMessages(int postingUser){
         
         Connection conn = ConnectionUtil.getConnection();
         String sql = "SELECT * FROM message WHERE posted_by = ?";

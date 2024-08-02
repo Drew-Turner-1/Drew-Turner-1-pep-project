@@ -41,7 +41,7 @@ public class SocialMediaController {
 
         app.get("/messages", this::getAllMessages);
         app.get("/messages/{message_id}", this::getMessageById);
-        // app.get("accounts/{account_id}/messages", this::getAllUserMessages);
+        app.get("accounts/{account_id}/messages", this::getAllUserMessages);
         app.post("/register", this::addAccount);
         app.post("/login", this::loginAccount);
         app.post("/messages", this::createMessage);
@@ -103,11 +103,9 @@ public class SocialMediaController {
         ctx.status(200).json(allMessages);
     }
 
-    private void getAllMessagesById(Context ctx){
-        int postingUser = account.getAccount_id();
-        Message newMessage = messageService.getAllMessagesById(postingUser);
-
-        List<Message> allMessagesById = new ArrayList<Message>(messageService.getAllMessagesById());
+    private void getAllUserMessages(Context ctx){
+        int postingUser = ctx.bodyAsClass(int.class);
+        List<Message> allMessagesById = new ArrayList<Message>(messageService.getAllUserMessages(postingUser));
         ctx.status(200).json(allMessagesById);
     }
 
