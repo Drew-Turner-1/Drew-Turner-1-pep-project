@@ -8,6 +8,7 @@ import Util.ConnectionUtil;
 
 public class MessageDAO {
 
+
     int messageStatusDAO;
 
     public Message addMessage(Message message){
@@ -61,6 +62,34 @@ public class MessageDAO {
         return null;
         }
     }
+
+    public List<Message> getAllMessagesById(int postingUser){
+        
+        Connection conn = ConnectionUtil.getConnection();
+        String sql = "SELECT * FROM message WHERE posted_by = ?";
+        try{
+            List<Message> allMessages = new ArrayList<>();
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1,postingUser);
+            pstmt.executeQuery();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+
+            if(rs.next()){
+                Message messageToAdd = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
+                allMessages.add(messageToAdd);
+                return allMessages;
+            }
+            else{
+                return null;
+            }
+        }
+        catch(Exception e){
+        e.printStackTrace();
+        return null;
+        }
+    }
+
     public List<Integer> getAllPosters(Message message){
         ArrayList<Integer> allPosters = new ArrayList<>();
         Connection conn = ConnectionUtil.getConnection();

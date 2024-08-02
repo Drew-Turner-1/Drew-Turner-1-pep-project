@@ -42,6 +42,17 @@ public class MessageService {
         }
     }
 
+    public List<Message> getAllMessagesById(int postingUser){
+        try{
+            List<Message> allMessagesById = messageDAO.getAllMessagesById(postingUser);
+            return allMessagesById;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public void validateNewMessage(Message message){
 
         if(Objects.isNull(message)){

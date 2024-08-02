@@ -104,15 +104,9 @@ public class SocialMediaController {
     }
 
     private void getAllMessagesById(Context ctx){
-        Message message = ctx.bodyAsClass(Message.class);
-        Message newMessage = messageService.createMessage(message);
+        int postingUser = account.getAccount_id();
+        Message newMessage = messageService.getAllMessagesById(postingUser);
 
-        if((newMessage != null)){
-            ctx.status(200).json(newMessage);
-        }
-        else{
-            ctx.status(400);
-        }
         List<Message> allMessagesById = new ArrayList<Message>(messageService.getAllMessagesById());
         ctx.status(200).json(allMessagesById);
     }
