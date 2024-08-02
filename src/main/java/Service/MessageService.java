@@ -6,7 +6,7 @@ import DAO.AccountDAO;
 import Model.Message;
 
 public class MessageService {
-    
+
     private MessageDAO messageDAO;
     private AccountDAO accountDAO;
 
@@ -39,7 +39,7 @@ public class MessageService {
         }
     }
 
-    public List<Message> getAllUserMessages(int postingUser){
+    public List<Message> getAllUserMessages(Message postingUser){
         try{
             List<Message> allMessagesById = messageDAO.getAllUserMessages(postingUser);
             return allMessagesById;
@@ -63,6 +63,7 @@ public class MessageService {
 
     public Message editMessageById(Message messageIdOnly){
         try{
+            validateMessageById(messageIdOnly);
             Message updatedMessage = messageDAO.editMessageById(messageIdOnly);
             return updatedMessage;
         }
@@ -88,6 +89,22 @@ public class MessageService {
 
         if(Objects.isNull(message)){
             throw new IllegalArgumentException("Message can't be empty. ");
+        }
+        if(message.getMessage_text().length() >= 255){
+            throw new IllegalArgumentException("Message must be under 255 characters. ");
+        }
+        if(! accountDAO.getAllAccountIds().contains(message.getPosted_by())){
+            throw new IllegalArgumentException("User doesn't exist. ");
+        }
+    }
+
+    public void validateMessageById(Message message){
+
+        if(Objects.isNull(message)){
+            throw new IllegalArgumentException("Message can't be empty. ");
+        }
+        if(! messageDAO.getAllMessageIds(message).contains(message.getMessage_id())){
+            throw new IllegalArgumentException("Message doesn't exist. ");
         }
         if(message.getMessage_text().length() >= 255){
             throw new IllegalArgumentException("Message must be under 255 characters. ");

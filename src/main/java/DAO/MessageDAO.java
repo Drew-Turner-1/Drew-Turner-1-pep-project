@@ -62,14 +62,15 @@ public class MessageDAO {
         }
     }
 
-    public List<Message> getAllUserMessages(int postingUser){
+    public List<Message> getAllUserMessages(Message postingUser){
         
         Connection conn = ConnectionUtil.getConnection();
         String sql = "SELECT * FROM message WHERE posted_by = ?";
+        int postingUserConversion = postingUser.getPosted_by();
         try{
             List<Message> allMessages = new ArrayList<>();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1,postingUser);
+            pstmt.setInt(1,postingUserConversion);
             pstmt.executeQuery();
 
             ResultSet rs = pstmt.getGeneratedKeys();
@@ -183,6 +184,31 @@ public class MessageDAO {
                 int userToAdd = rs.getInt("posted_by");
                 allPosters.add(userToAdd);
                 return allPosters;
+            }
+            else{
+                return null;
+            }
+        }
+        catch(Exception e){
+        e.printStackTrace();
+        return null;
+        }
+    }
+
+    public List<Integer> getAllMessageIds(Message message){
+        ArrayList<Integer> allMessageIds = new ArrayList<>();
+        Connection conn = ConnectionUtil.getConnection();
+        String sql = "SELECT message_id FROM message";
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.executeQuery();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+
+            if(rs.next()){
+                int idToAdd = rs.getInt("message_id");
+                allMessageIds.add(idToAdd);
+                return allMessageIds;
             }
             else{
                 return null;
