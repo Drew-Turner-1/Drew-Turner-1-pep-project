@@ -3,7 +3,7 @@ package DAO;
 import java.sql.*;
 import java.util.*;
 import Model.Message;
-import Model.Account;
+//import Model.Account;
 import Util.ConnectionUtil;
 
 public class MessageDAO {
@@ -141,6 +141,33 @@ public class MessageDAO {
         return null;
         }
     }
+
+    public Message deleteMessageById(Message messageIdOnly){
+        
+        Connection conn = ConnectionUtil.getConnection();
+        String sql = "DELETE FROM message WHERE message_id = ?";
+        try{
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1,messageIdOnly.getMessage_id());
+
+            pstmt.executeUpdate();
+
+            ResultSet rs = pstmt.getGeneratedKeys();
+
+            if(rs.next()){
+                Message deletedMessage = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
+                return deletedMessage;
+            }
+            else{
+                return null;
+            }
+        }
+        catch(Exception e){
+        e.printStackTrace();
+        return null;
+        }
+    }
+
 
     public List<Integer> getAllPosters(Message message){
         ArrayList<Integer> allPosters = new ArrayList<>();

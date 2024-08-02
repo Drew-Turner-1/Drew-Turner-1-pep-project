@@ -4,12 +4,9 @@ import java.util.*;
 import DAO.MessageDAO;
 import DAO.AccountDAO;
 import Model.Message;
-import Model.Account;
 
 public class MessageService {
-
-    int messageServiceStatus;
-
+    
     private MessageDAO messageDAO;
     private AccountDAO accountDAO;
 
@@ -44,7 +41,7 @@ public class MessageService {
 
     public List<Message> getAllUserMessages(int postingUser){
         try{
-            List<Message> allMessagesById = messageDAO.getAllMessagesById(postingUser);
+            List<Message> allMessagesById = messageDAO.getAllUserMessages(postingUser);
             return allMessagesById;
         }
         catch (Exception e) {
@@ -68,6 +65,18 @@ public class MessageService {
         try{
             Message updatedMessage = messageDAO.editMessageById(messageIdOnly);
             return updatedMessage;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public Message deleteMessageById(Message messageIdOnly){
+        try{
+            Message deletedMessage = messageDAO.deleteMessageById(messageIdOnly);
+            return deletedMessage;
         }
         catch (Exception e) {
             e.printStackTrace();
