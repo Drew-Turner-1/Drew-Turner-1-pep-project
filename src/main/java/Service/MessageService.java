@@ -11,18 +11,30 @@ public class MessageService {
     int messageServiceStatus;
 
     private MessageDAO messageDAO;
+    private AccountDAO accountDAO;
 
     public MessageService(){
         this.messageDAO = new MessageDAO();
+        this.accountDAO = new AccountDAO();
     }
-
 
 
     public Message createMessage(Message message){
         try{
-            messageDAO.validateNewMessage();
+            validateNewMessage(message);
             Message newMessage = messageDAO.addMessage(message);
             return newMessage;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public List<Message> getAllMessages(){
+        try{
+            List<Message> allMessages = messageDAO.getAllMessages();
+            return allMessages;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -38,10 +50,9 @@ public class MessageService {
         if(message.getMessage_text().length() >= 255){
             throw new IllegalArgumentException("Message must be under 255 characters. ");
         }
-        if(messageDAO.checkPoster()){
-            throw new IllegalArgumentException("Message must be under 255 characters. ");
+        if(! accountDAO.getAllAccountIds().contains(message.getPosted_by())){
+            throw new IllegalArgumentException("User doesn't exist. ");
         }
-
     }
 
 }

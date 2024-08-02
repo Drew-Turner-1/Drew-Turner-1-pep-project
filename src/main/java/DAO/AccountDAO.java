@@ -117,6 +117,28 @@ public class AccountDAO {
     return null;
   }
 
+  public List<Integer> getAllAccountIds(){
+    Connection conn = ConnectionUtil.getConnection();
+    String sql = "SELECT account_id FROM account";
+
+    try{
+      ArrayList<Integer> allAccountIds = new ArrayList<>();
+      PreparedStatement pstmt = conn.prepareStatement(sql);
+      ResultSet rs = pstmt.executeQuery();
+      if(rs.next()){
+        int newAccountIdToAdd = (rs.getInt("account_id"));
+        allAccountIds.add(newAccountIdToAdd);
+      }
+      statusDAO = 200;
+      return allAccountIds;
+    }
+    catch(SQLException e){
+      e.printStackTrace();
+      return null;
+    }
+  }
+
+
   public int getStatusDAO(){
     return statusDAO;
   }

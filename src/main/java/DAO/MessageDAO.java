@@ -23,7 +23,7 @@ public class MessageDAO {
             ResultSet rs = pstmt.getGeneratedKeys();
 
             if(rs.next()){
-                Message newMessage = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
+                Message newMessage = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), rs.getString("message_text"), rs.getLong("time_posted_epoch"));
                 return newMessage;
             }
             else{
@@ -36,11 +36,12 @@ public class MessageDAO {
         }
     }
 
-    public List<Message> getAllMessages(Message message){
-        ArrayList<Message> allMessages = new ArrayList<>();
+    public List<Message> getAllMessages(){
+        
         Connection conn = ConnectionUtil.getConnection();
         String sql = "SELECT * FROM message";
         try{
+            List<Message> allMessages = new ArrayList<>();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.executeQuery();
 
@@ -60,9 +61,8 @@ public class MessageDAO {
         return null;
         }
     }
-    public boolean checkPoster(Message message){
-        boolean userExists;
-        ArrayList<Integer> postedBy = new ArrayList<>();
+    public List<Integer> getAllPosters(Message message){
+        ArrayList<Integer> allPosters = new ArrayList<>();
         Connection conn = ConnectionUtil.getConnection();
         String sql = "SELECT posted_by FROM message";
         try{
@@ -73,13 +73,11 @@ public class MessageDAO {
 
             if(rs.next()){
                 int userToAdd = rs.getInt("posted_by");
-                postedBy.add(userToAdd);
+                allPosters.add(userToAdd);
+                return allPosters;
             }
             else{
-                return false;
-            }
-            if(postedBy.equals()){
-                return true;
+                return null;
             }
         }
         catch(Exception e){

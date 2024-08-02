@@ -1,7 +1,7 @@
 package Controller;
 
 //import com.fasterxml.jackson.databind.ObjectMapper;
-
+import java.util.*;
 import Model.Account;
 import Model.Message;
 import Service.AccountService;
@@ -32,19 +32,19 @@ public class SocialMediaController {
 
     public SocialMediaController(){
             this.accountService = new AccountService();
-            this.accountService = new AccountService();
+            this.messageService = new MessageService();
     }
 
     public Javalin startAPI() {
             Javalin app = Javalin.create();
         // app.get("example-endpoint", this::exampleHandler);
 
-        // app.get("/messages", this::getMessage);
-        // app.get("/messages/{message_id}", this::getMessageById);
+        app.get("/messages", this::getAllMessages);
+        app.get("/messages/{message_id}", this::getMessageById);
         // app.get("accounts/{account_id}/messages", this::getAllUserMessages);
         app.post("/register", this::addAccount);
         app.post("/login", this::loginAccount);
-        // app.post("/messages", this::createMessage);
+        app.post("/messages", this::createMessage);
         // app.patch("/messages/{message_id}", this::editMessageById);
         // app.delete("/messages/{message_id}", this::deleteMessageById);
         
@@ -86,16 +86,35 @@ public class SocialMediaController {
         }
     }
 
-    // private void postMessage(Context ctx){
-    //     Message message = ctx.bodyAsClass(Message.class);
-    //     Message newMessage = messageService.createMessage(message);
+    private void createMessage(Context ctx){
+        Message message = ctx.bodyAsClass(Message.class);
+        Message newMessage = messageService.createMessage(message);
 
-    //     if((newMessage != null) && (messageService.validateMessageStatus() == true)){
-    //         ctx.status(200).json(newMessage);
-    //     }
-    //     else{
-    //         ctx.status(400);
-    //     }
-    // }
+        if((newMessage != null)){
+            ctx.status(200).json(newMessage);
+        }
+        else{
+            ctx.status(400);
+        }
+    }
+
+    private void getAllMessages(Context ctx){
+        List<Message> allMessages = new ArrayList<Message>(messageService.getAllMessages());
+        ctx.status(200).json(allMessages);
+    }
+
+    private void getAllMessagesById(Context ctx){
+        Message message = ctx.bodyAsClass(Message.class);
+        Message newMessage = messageService.createMessage(message);
+
+        if((newMessage != null)){
+            ctx.status(200).json(newMessage);
+        }
+        else{
+            ctx.status(400);
+        }
+        List<Message> allMessagesById = new ArrayList<Message>(messageService.getAllMessagesById());
+        ctx.status(200).json(allMessagesById);
+    }
 
 }
