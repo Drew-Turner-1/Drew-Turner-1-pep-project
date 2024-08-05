@@ -130,6 +130,7 @@ public class AccountDAO {
         allAccountIds.add(newAccountIdToAdd);
       }
       statusDAO = 200;
+      System.out.println(allAccountIds);
       return allAccountIds;
     }
     catch(SQLException e){

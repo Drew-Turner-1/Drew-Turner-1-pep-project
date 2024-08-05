@@ -14,7 +14,8 @@ public class MessageDAO {
         Connection conn = ConnectionUtil.getConnection();
         String sql = "INSERT INTO message (posted_by, message_text, time_posted_epoch) VALUES (?, ?, ?)";
         try{
-            PreparedStatement pstmt = conn.prepareStatement(sql);
+            PreparedStatement pstmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+
             pstmt.setInt(1, message.getPosted_by());
             pstmt.setString(2, message.getMessage_text());
             pstmt.setLong(3, message.getTime_posted_epoch());
@@ -23,7 +24,7 @@ public class MessageDAO {
             ResultSet rs = pstmt.getGeneratedKeys();
 
             if(rs.next()){
-                Message newMessage = new Message(rs.getInt("message_id"), rs.getInt("posted_by"), rs.getString("message_text"), rs.getLong("time_posted_epoch"));
+                Message newMessage = new Message(rs.getInt("message_id"), message.getPosted_by(), message.getMessage_text(), message.getTime_posted_epoch());
                 return newMessage;
             }
             else{

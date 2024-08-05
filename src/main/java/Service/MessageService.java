@@ -93,6 +93,9 @@ public class MessageService {
         if(message.getMessage_text().length() >= 255){
             throw new IllegalArgumentException("Message must be under 255 characters. ");
         }
+        if(message.getMessage_text().equals("")){
+            throw new IllegalArgumentException("Message must be under 255 characters. ");
+        }
         if(! accountDAO.getAllAccountIds().contains(message.getPosted_by())){
             throw new IllegalArgumentException("User doesn't exist. ");
         }
