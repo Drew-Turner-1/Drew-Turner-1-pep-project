@@ -45,7 +45,7 @@ public class SocialMediaController {
         app.post("/register", this::addAccount);
         app.post("/login", this::loginAccount);
         app.post("/messages", this::createMessage);
-        app.patch("/messages/{message_id}", this::editMessageById);
+        app.patch("/messages/{message_id}", this::updateMessageById);
         app.delete("/messages/{message_id}", this::deleteMessageById);
         
         
@@ -122,17 +122,29 @@ public class SocialMediaController {
         ctx.status(200);    
     }
 
-    private void editMessageById(Context ctx){
-        Message messageIdOnly = ctx.bodyAsClass(Message.class);
-        Message updatedMessage = messageService.editMessageById(messageIdOnly);
-        ctx.status(200).json(updatedMessage);
+    private void updateMessageById(Context ctx){
+        int messageIdOnly = Integer.parseInt(ctx.pathParam("message_id"));
+
+        //need to change this...
+        String textToUpdate = "";
+        //String textToUpdate = ctx.bodyAsClass(String.class);
+        
+        Message updatedMessage = messageService.editMessageById(messageIdOnly, textToUpdate);
+        //ctx.status(200).json(updatedMessage);
+
+        if((updatedMessage != null)){
+            ctx.status(200).json(updatedMessage);
+        }
+        else{
+            ctx.status(400);
+        }
+        
     }
 
 
     private void deleteMessageById(Context ctx){
         int messageIdOnly = Integer.parseInt(ctx.pathParam("message_id"));
         Message deletedMessage = messageService.deleteMessageById(messageIdOnly);
-
         if((deletedMessage != null)){
             ctx.status(200).json(deletedMessage);
         }    

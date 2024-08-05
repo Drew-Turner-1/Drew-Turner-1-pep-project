@@ -110,30 +110,28 @@ public class MessageDAO {
     }
 
 
-    public Message editMessageById(Message messageIdOnly){
+    public boolean updateMessageById(int messageIdOnly, String textToUpdate){
         
         Connection conn = ConnectionUtil.getConnection();
         String sql = "UPDATE message SET message_text = ? WHERE message_id = ?";
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1,messageIdOnly.getMessage_text());
-            pstmt.setInt(2,messageIdOnly.getMessage_id());
+            pstmt.setString(1,textToUpdate);
+            pstmt.setInt(2,messageIdOnly);
 
-            pstmt.executeUpdate();
+            int rowsAffected = pstmt.executeUpdate();
 
-            ResultSet rs = pstmt.getGeneratedKeys();
-
-            if(rs.next()){
-                Message updatedMessage = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
-                return updatedMessage;
+            if(rowsAffected == 1){
+                boolean isUpdated = true;
+                return isUpdated;
             }
             else{
-                return null;
+                return false;
             }
         }
         catch(Exception e){
         e.printStackTrace();
-        return null;
+        return false;
         }
     }
 
@@ -157,7 +155,7 @@ public class MessageDAO {
         }
         catch(Exception e){
         e.printStackTrace();
-        return null;
+        return false;
         }
     }
 

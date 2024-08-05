@@ -63,11 +63,17 @@ public class MessageService {
         }
     }
 
-    public Message editMessageById(Message messageIdOnly){
+    public Message editMessageById(int messageIdOnly, String textToUpdate ){
+
         try{
-            validateMessageById(messageIdOnly);
-            Message updatedMessage = messageDAO.editMessageById(messageIdOnly);
-            return updatedMessage;
+            validateMessageExists(messageIdOnly);
+            validateMessageText(textToUpdate);
+            boolean isUpdated = messageDAO.updateMessageById(messageIdOnly, textToUpdate);
+            if(isUpdated = true){
+                Message updatedMessage = messageDAO.getMessageById(messageIdOnly);
+                return updatedMessage;
+            }
+            return null;
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -114,27 +120,33 @@ public class MessageService {
             throw new IllegalArgumentException("Message must be under 255 characters. ");
         }
         if(message.getMessage_text().equals("")){
-            throw new IllegalArgumentException("Message must be under 255 characters. ");
-        }
-        if(! accountDAO.getAllAccountIds().contains(message.getPosted_by())){
-            throw new IllegalArgumentException("User doesn't exist. ");
-        }
-    }
-
-    public void validateMessageById(Message message){
-
-        if(Objects.isNull(message)){
             throw new IllegalArgumentException("Message can't be empty. ");
         }
-        if(! messageDAO.getAllMessageIds(message).contains(message.getMessage_id())){
-            throw new IllegalArgumentException("Message doesn't exist. ");
-        }
-        if(message.getMessage_text().length() >= 255){
-            throw new IllegalArgumentException("Message must be under 255 characters. ");
-        }
         if(! accountDAO.getAllAccountIds().contains(message.getPosted_by())){
             throw new IllegalArgumentException("User doesn't exist. ");
         }
     }
+
+    public void validateMessageExists(int messageIdOnly){
+
+        if(Objects.isNull(messageDAO.getMessageById(messageIdOnly))){
+            throw new IllegalArgumentException("Message with this ID doesn't exist. ");
+        }
+    }
+
+    public void validateMessageText(String messageText){
+
+        if(messageText.equals(null)){
+            throw new IllegalArgumentException("Message can't be empty. ");
+        }
+        if(messageText.equals("")){
+            throw new IllegalArgumentException("Message can't be empty. ");
+        }
+        if(messageText.length() >= 255){
+            throw new IllegalArgumentException("Message must be under 255 characters. ");
+        }
+    }
+
+
 
 }
