@@ -40,7 +40,7 @@ public class MessageService {
         }
     }
 
-    public List<Message> getAllUserMessages(Message postingUser){
+    public List<Message> getAllUserMessages(int postingUser){
         try{
             List<Message> allMessagesById = messageDAO.getAllUserMessages(postingUser);
             return allMessagesById;

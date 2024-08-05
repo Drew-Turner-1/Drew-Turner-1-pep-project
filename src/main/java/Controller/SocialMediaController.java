@@ -106,7 +106,10 @@ public class SocialMediaController {
     private void getAllUserMessages(Context ctx){
         int postingUser = Integer.parseInt(ctx.pathParam("account_id"));
         List<Message> allMessagesById = new ArrayList<Message>(messageService.getAllUserMessages(postingUser));
-        ctx.status(200).json(allMessagesById);
+        if(allMessagesById != null){
+            ctx.status(200).json(allMessagesById);
+        }    
+        ctx.status(200); 
     }
 
     private void getMessageById(Context ctx){

@@ -61,15 +61,14 @@ public class MessageDAO {
         }
     }
 
-    public List<Message> getAllUserMessages(Message postingUser){
+    public List<Message> getAllUserMessages(int postingUser){
         
         Connection conn = ConnectionUtil.getConnection();
         String sql = "SELECT * FROM message WHERE posted_by = ?";
-        int postingUserConversion = postingUser.getPosted_by();
         try{
             List<Message> allMessages = new ArrayList<>();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1,postingUserConversion);
+            pstmt.setInt(1,postingUser);
             ResultSet rs = pstmt.executeQuery();
 
             if(rs.next()){
@@ -78,7 +77,7 @@ public class MessageDAO {
                 return allMessages;
             }
             else{
-                return null;
+                return allMessages;
             }
         }
         catch(Exception e){
