@@ -31,6 +31,7 @@ public class MessageService {
     public List<Message> getAllMessages(){
         try{
             List<Message> allMessages = messageDAO.getAllMessages();
+            validateGetAllMessages(allMessages);
             return allMessages;
         }
         catch (Exception e) {
@@ -50,8 +51,9 @@ public class MessageService {
         }
     }
 
-    public Message getMessageById(Message messageIdOnly){
+    public Message getMessageById(int messageIdOnly){
         try{
+
             Message messageById = messageDAO.getMessageById(messageIdOnly);
             return messageById;
         }
@@ -75,13 +77,28 @@ public class MessageService {
 
 
     public Message deleteMessageById(Message messageIdOnly){
+        
         try{
-            Message deletedMessage = messageDAO.deleteMessageById(messageIdOnly);
+            int deletedMessage = messageDAO.getMessageById(messageIdOnly);
+            if(){
+
+            }
+            return deletedMessage;
+        }
+        try{
+            boolean isDeleted = messageDAO.deleteMessageById(messageIdOnly);
             return deletedMessage;
         }
         catch (Exception e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    public void validateGetAllMessages(List<Message> allMessages){
+
+        if(Objects.isNull(allMessages)){
+            throw new IllegalArgumentException("No messages. ");
         }
     }
 

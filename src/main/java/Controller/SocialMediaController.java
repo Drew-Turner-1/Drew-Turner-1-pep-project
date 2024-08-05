@@ -104,15 +104,19 @@ public class SocialMediaController {
     }
 
     private void getAllUserMessages(Context ctx){
-        Message postingUser = ctx.bodyAsClass(Message.class);
+        int postingUser = Integer.parseInt(ctx.pathParam("account_id"));
         List<Message> allMessagesById = new ArrayList<Message>(messageService.getAllUserMessages(postingUser));
         ctx.status(200).json(allMessagesById);
     }
 
     private void getMessageById(Context ctx){
-        Message messageIdOnly = ctx.bodyAsClass(Message.class);
+        int messageIdOnly = Integer.parseInt(ctx.pathParam("message_id"));
         Message messageById = messageService.getMessageById(messageIdOnly);
-        ctx.status(200).json(messageById);
+
+        if((messageById != null)){
+            ctx.status(200).json(messageById);
+        }    
+        ctx.status(200);    
     }
 
     private void editMessageById(Context ctx){
@@ -123,7 +127,7 @@ public class SocialMediaController {
 
 
     private void deleteMessageById(Context ctx){
-        Message messageIdOnly = ctx.bodyAsClass(Message.class);
+        Message messageIdOnly = Integer.parseInt(ctx.pathParam("message_id"));
         Message deletedMessage = messageService.deleteMessageById(messageIdOnly);
         ctx.status(200).json(deletedMessage);
     }

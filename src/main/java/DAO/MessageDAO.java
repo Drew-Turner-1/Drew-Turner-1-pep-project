@@ -44,9 +44,7 @@ public class MessageDAO {
         try{
             List<Message> allMessages = new ArrayList<>();
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.executeQuery();
-
-            ResultSet rs = pstmt.getGeneratedKeys();
+            ResultSet rs = pstmt.executeQuery();
 
             if(rs.next()){
                 Message messageToAdd = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
@@ -72,9 +70,7 @@ public class MessageDAO {
             List<Message> allMessages = new ArrayList<>();
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,postingUserConversion);
-            pstmt.executeQuery();
-
-            ResultSet rs = pstmt.getGeneratedKeys();
+            ResultSet rs = pstmt.executeQuery();
 
             if(rs.next()){
                 Message messageToAdd = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
@@ -91,16 +87,14 @@ public class MessageDAO {
         }
     }
 
-    public Message getMessageById(Message messageIdOnly){
+    public Message getMessageById(int messageIdOnly){
         
         Connection conn = ConnectionUtil.getConnection();
         String sql = "SELECT * FROM message WHERE message_id = ?";
         try{
             PreparedStatement pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1,messageIdOnly.getMessage_id());
-            pstmt.executeQuery();
-
-            ResultSet rs = pstmt.getGeneratedKeys();
+            pstmt.setInt(1,messageIdOnly);
+            ResultSet rs = pstmt.executeQuery();
 
             if(rs.next()){
                 Message messageById = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
@@ -144,7 +138,7 @@ public class MessageDAO {
         }
     }
 
-    public Message deleteMessageById(Message messageIdOnly){
+    public boolean deleteMessageById(Message messageIdOnly){
         
         Connection conn = ConnectionUtil.getConnection();
         String sql = "DELETE FROM message WHERE message_id = ?";
@@ -152,16 +146,14 @@ public class MessageDAO {
             PreparedStatement pstmt = conn.prepareStatement(sql);
             pstmt.setInt(1,messageIdOnly.getMessage_id());
 
-            pstmt.executeUpdate();
+            int rowsAffected = pstmt.executeUpdate();
 
-            ResultSet rs = pstmt.getGeneratedKeys();
-
-            if(rs.next()){
-                Message deletedMessage = new Message(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getLong(4));
-                return deletedMessage;
+            if(rowsAffected == 1){
+                boolean isDeleted = true;
+                return isDeleted;
             }
             else{
-                return null;
+                return false;
             }
         }
         catch(Exception e){
