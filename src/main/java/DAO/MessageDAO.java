@@ -52,7 +52,7 @@ public class MessageDAO {
                 return allMessages;
             }
             else{
-                return null;
+                return allMessages;
             }
         }
         catch(Exception e){
