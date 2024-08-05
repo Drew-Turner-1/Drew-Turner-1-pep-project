@@ -127,9 +127,13 @@ public class SocialMediaController {
 
 
     private void deleteMessageById(Context ctx){
-        Message messageIdOnly = Integer.parseInt(ctx.pathParam("message_id"));
+        int messageIdOnly = Integer.parseInt(ctx.pathParam("message_id"));
         Message deletedMessage = messageService.deleteMessageById(messageIdOnly);
-        ctx.status(200).json(deletedMessage);
+
+        if((deletedMessage != null)){
+            ctx.status(200).json(deletedMessage);
+        }    
+        ctx.status(200);   
     }
 
 }

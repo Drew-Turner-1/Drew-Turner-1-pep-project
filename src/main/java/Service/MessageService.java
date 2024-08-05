@@ -76,22 +76,25 @@ public class MessageService {
     }
 
 
-    public Message deleteMessageById(Message messageIdOnly){
+    public Message deleteMessageById(int messageIdOnly){
         
-        try{
-            int deletedMessage = messageDAO.getMessageById(messageIdOnly);
-            if(){
+            try{
+                Message messageToDelete = messageDAO.getMessageById(messageIdOnly);
+                validateMessageDeletion(messageIdOnly);
+                return messageToDelete;
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                return null;
 
             }
-            return deletedMessage;
-        }
-        try{
-            boolean isDeleted = messageDAO.deleteMessageById(messageIdOnly);
-            return deletedMessage;
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            return null;
+    }
+
+    public void validateMessageDeletion(int messageIdOnly){
+        Message messageToDelete = messageDAO.getMessageById(messageIdOnly); 
+
+        if(Objects.isNull(messageToDelete)){
+            throw new IllegalArgumentException("Message doesn't exist. ");
         }
     }
 
