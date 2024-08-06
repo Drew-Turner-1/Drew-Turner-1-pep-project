@@ -126,10 +126,9 @@ public class SocialMediaController {
         int messageIdOnly = Integer.parseInt(ctx.pathParam("message_id"));
 
         //need to change this...
-        String textToUpdate = "";
-        //String textToUpdate = ctx.bodyAsClass(String.class);
-        
-        Message updatedMessage = messageService.editMessageById(messageIdOnly, textToUpdate);
+        //String textToUpdate = "";
+        Message textToUpdate = ctx.bodyAsClass(Message.class);        
+        Message updatedMessage = messageService.updateMessageById(messageIdOnly, textToUpdate);
         //ctx.status(200).json(updatedMessage);
 
         if((updatedMessage != null)){

@@ -63,13 +63,14 @@ public class MessageService {
         }
     }
 
-    public Message editMessageById(int messageIdOnly, String textToUpdate ){
+    public Message updateMessageById(int messageIdOnly, Message textToUpdate ){
 
         try{
+            String messageTextToUpdate = textToUpdate.getMessage_text();
             validateMessageExists(messageIdOnly);
-            validateMessageText(textToUpdate);
-            boolean isUpdated = messageDAO.updateMessageById(messageIdOnly, textToUpdate);
-            if(isUpdated = true){
+            validateMessageText(messageTextToUpdate);
+            boolean isUpdated = messageDAO.updateMessageById(messageIdOnly, messageTextToUpdate);
+            if(isUpdated == true){
                 Message updatedMessage = messageDAO.getMessageById(messageIdOnly);
                 return updatedMessage;
             }
